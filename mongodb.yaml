@@ -1,4 +1,5 @@
 - name: configuring mongodb server
+  hosts: mongodb
   become: yes
   tasks:
   - name: copy mongodb repo
@@ -10,4 +11,3 @@
     ansible.builtin.dnf:
       name: mongodb-org
       state: present
-      
