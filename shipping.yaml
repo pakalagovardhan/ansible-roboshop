@@ -7,8 +7,8 @@
       name: "{{ item }}"
       state: present
     loop:
-    - mysql
     - mavan
+    - mysql
 
   - name: install pysql
     ansible.builtin.pip:
