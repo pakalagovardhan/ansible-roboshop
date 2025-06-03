@@ -4,8 +4,12 @@
   tasks:
   - name: install mavan
     ansible.builtin.dnf:
-      name: maven
+      name: "{{ item }}"
       state: present
+    loop:
+    - cryptography
+    - mysql
+    - mavan
 
   - name: install pysql
     ansible.builtin.pip:
@@ -59,11 +63,6 @@
       name: shipping
       state: started
       enabled: yes
-
-  - name: install mysql client
-    ansible.builtin.dnf:
-      name: mysql
-      state: present
 
   - name: connect to mysql using app user
     community.mysql.mysql_info:
