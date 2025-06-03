@@ -56,7 +56,7 @@
       enabled: yes
 
   - name: install mysql client
-    ansible:builtin.dnf:
+    ansible.builtin.dnf:
       name: mysql
       state: present
 
@@ -66,4 +66,3 @@
       login_password: RoboShop@1
       login_host: mysql.dev1407.site
       login_db: cities
-      
