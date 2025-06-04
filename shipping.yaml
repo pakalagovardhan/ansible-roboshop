@@ -1,16 +1,16 @@
-- name: configuring shipping conetent
+- name: configure shipping component
   hosts: shipping
   become: yes
   tasks:
-  - name: install mavan
+  - name: install maven and mysql
     ansible.builtin.dnf:
       name: "{{ item }}"
-      state: present
+      state: installed
     loop:
-    - mavan
+    - maven
     - mysql
-
-  - name: install pysql
+    
+  - name: install PyMySQL and cryptography 
     ansible.builtin.pip:
       name: "{{ item }}"
       executable: pip3.9
@@ -23,25 +23,25 @@
       path: /app
       state: directory
 
-  - name: create system user roboshop
+  - name: create roboshop system user
     ansible.builtin.user:
       name: roboshop
       shell: /sbin/nologin
       system: true
       home: /app
 
-  - name: download zip code
+  - name: download shipping code
     ansible.builtin.get_url:
-      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
       dest: /tmp/shipping.zip
 
-  - name: extract code
+  - name: extract shipping code
     ansible.builtin.unarchive:
       src: /tmp/shipping.zip
       dest: /app
       remote_src: yes
 
-  - name: install mavan dependencies
+  - name: install maven dependencies
     ansible.builtin.command: mvn clean package
     args:
       chdir: /app
@@ -51,16 +51,16 @@
     args:
       chdir: /app
 
-  - name: copying service
+  - name: copy shipping service
     ansible.builtin.copy:
       src: shipping.service
       dest: /etc/systemd/system/shipping.service
 
-  - name: daemon_reload
+  - name: daemon reload
     ansible.builtin.systemd_service:
       daemon_reload: true
 
-  - name: enable and start
+  - name: enable and start shipping
     ansible.builtin.service:
       name: shipping
       state: started
@@ -70,7 +70,7 @@
   #   community.mysql.mysql_info:
   #     login_user: shipping
   #     login_password: RoboShop@1
-  #     login_host: mysql.dev1407.site
+  #     login_host: mysql.daws84s.site
   #     login_db: cities
 
   - name: import data
@@ -80,7 +80,7 @@
       name: all
       login_user: root
       login_password: RoboShop@1
-      login_host: mysql.daws84s.site
+      login_host: mysql.dev1407.site
       state: import
       target: "{{ item }}"
     loop:
